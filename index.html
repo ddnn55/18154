@@ -1,76 +1,79 @@
-
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>18,154 Consistent and Regular Views of NYC</title>
-    <link rel="stylesheet" href="css/theme/default/style.css" type="text/css">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
-    <script src="OpenLayers.js"></script>
-    <script type="text/javascript">
 
-        var zoomify_width = 19200;
-		var zoomify_height = 23168;
-		var zoomify_url = "NYC_1327653827_128/";
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>18,154 Consistent and Regular Views of NYC</title>
+  <link rel="stylesheet" href="css/theme/default/style.css" type="text/css">
+  <link rel="stylesheet" href="css/style.css" type="text/css">
+  <link rel="stylesheet" href="ol.css" type="text/css">
+  <script src="ol.js"></script>
+  <script type="text/javascript">
+    var imgWidth = 19200;
+    var imgHeight = 23168;
 
-        var map, zoomify;
+    var imgCenter = [imgWidth / 2, -imgHeight / 2];
 
-        function init(){
-	       /* First we initialize the zoomify pyramid (to get number of tiers) */
-	        var zoomify = new OpenLayers.Layer.Zoomify( "Zoomify", zoomify_url, 
-		  		new OpenLayers.Size( zoomify_width, zoomify_height ) );
+    var zoomify_url = "NYC_1327653827_128/";
 
-	       /* Map with raster coordinates (pixels) from Zoomify image */
-	        var options = {
-	            controls: [],
-	            maxExtent: new OpenLayers.Bounds(0, 0, zoomify_width, zoomify_height),
-	            maxResolution: Math.pow(2, zoomify.numberOfTiers-1 ),
-	            numZoomLevels: zoomify.numberOfTiers,
-	            units: 'pixels'
-	        };
+    var map, zoomify;
 
-	        map = new OpenLayers.Map("map", options);
-	        map.addLayer(zoomify);
+    function init() {
 
-	        map.addControl(new OpenLayers.Control.MousePosition());
-	        map.addControl(new OpenLayers.Control.PanZoomBar());
-	        map.addControl(new OpenLayers.Control.MouseDefaults());
-	        map.addControl(new OpenLayers.Control.KeyboardDefaults());
+      var proj = new ol.proj.Projection({
+        code: 'ZOOMIFY',
+        units: 'pixels',
+        extent: [0, 0, imgWidth, imgHeight]
+      });
 
-            map.setBaseLayer(zoomify);
-	        map.zoomTo(2);
+      var source = new ol.source.Zoomify({
+        url: zoomify_url,
+        size: [imgWidth, imgHeight]
+      });
 
+      var map = new ol.Map({
+        layers: [
+          new ol.layer.Tile({
+            source: source
+          })
+        ],
+        target: 'map',
+        view: new ol.View({
+          projection: proj,
+          center: imgCenter,
+          zoom: 1,
+          maxZoom: 7,
+          extent: [0, -imgHeight, imgWidth, 0]
+        })
+      });
 
+    };
+  </script>
 
-        };
+  <!-- Google Analytics -->
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-12257817-1']);
+    _gaq.push(['_trackPageview']);
 
-    </script>
+    (function() {
+      var ga = document.createElement('script');
+      ga.type = 'text/javascript';
+      ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 
-	<!-- Google Analytics -->
-	<script type="text/javascript">
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-12257817-1']);
-	  _gaq.push(['_trackPageview']);
+</head>
 
-	  (function() {
-	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
-	</script>
+<body onload="init()">
 
-  </head>
-  <body onload="init()">
+  <div id="map" class="bigmap"></div>
 
+</body>
 
-    <div id="map" class="bigmap"></div>
-
-
-<script src="http://static.getclicky.com/js" type="text/javascript"></script>
-<script type="text/javascript">try{ clicky.init(66493014); }catch(e){}</script>
-
-  </body>
 </html>
-
